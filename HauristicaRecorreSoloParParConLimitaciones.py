@@ -1,8 +1,7 @@
-# Importamos la librería 'time' para medir el tiempo de ejecución
 import time
 
 # Tamaño del tablero de ajedrez
-N = 11
+N = 9
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero
@@ -20,13 +19,11 @@ movimientos_caballo = [
 # Límite de movimientos basado en el tamaño del tablero
 limite_movimientos = int(N * N * 2.5)
 
-
 # Función para verificar si una posición es válida en el tablero
 def es_valido(x, y, tablero):
     return 0 <= x < N and 0 <= y < N and tablero[x][y] == -1
 
-
-# Heurística de Warnsdorff modificada: clasifica los movimientos primero por paridad y luego por la cantidad de movimientos posibles
+# Heurística de Warnsdorff modificada
 def ordenar_movimientos(x, y, tablero):
     movimientos_ordenados = []
     movimientos_par_impar = []
@@ -52,7 +49,6 @@ def ordenar_movimientos(x, y, tablero):
 
     return [(nx, ny) for nx, ny, _ in movimientos_ordenados]
 
-
 # Función para contar las opciones futuras de un movimiento
 def contar_opciones_futuras(x, y, tablero):
     count = 0
@@ -62,8 +58,7 @@ def contar_opciones_futuras(x, y, tablero):
             count += 1
     return count
 
-
-# Función de Backtracking para resolver el recorrido del caballo con poda basada en límite de movimientos
+# Función de Backtracking para resolver el recorrido del caballo
 def recorrido_caballo(x, y, movimiento, tablero, contador_nodos, contador_backtrack):
     # Incrementa el contador de nodos visitados
     contador_nodos[0] += 1
@@ -97,9 +92,9 @@ def recorrido_caballo(x, y, movimiento, tablero, contador_nodos, contador_backtr
 
     return False
 
-
 # Función para iniciar el recorrido del caballo
 def resolver_recorrido_inicial(x_inicio, y_inicio):
+    # Inicializar el tablero y los contadores
     tablero = [[-1 for _ in range(N)] for _ in range(N)]
     tablero[x_inicio][y_inicio] = 0  # Empezar desde la posición inicial
     contador_nodos = [0]  # Contador de nodos visitados
@@ -109,17 +104,13 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
     if recorrido_caballo(
         x_inicio, y_inicio, 1, tablero, contador_nodos, contador_backtrack
     ):
-        total_nodos[0] += contador_nodos[0]
-        soluciones_encontradas[0] += 1
-        return True, contador_nodos[0]
+        return True, contador_nodos[0]  # Retorna si se encontró solución y el total de nodos visitados
     else:
-        total_nodos[0] += contador_nodos[0]
-        return False, contador_nodos[0]
-
+        return False, contador_nodos[0]  # Retorna si no se encontró solución y el total de nodos visitados
 
 # Variables acumulativas
-total_nodos =[ 0]
-soluciones_encontradas = [0]
+total_nodos = 0
+soluciones_encontradas = 0
 
 # Iniciar el recorrido desde varias posiciones en el tablero
 if N % 2 == 1:
@@ -127,32 +118,31 @@ if N % 2 == 1:
         if x % 2 == 1:
             for y in range(1, N, 2):
                 print(f"Probando inicio en: ({x}, {y})")
-                resolver_recorrido_inicial(x, y)
-                print(
-                    "--------------------"
-            )
+                encontrado, nodos = resolver_recorrido_inicial(x, y)
+                if encontrado:
+                    soluciones_encontradas += 1
+                total_nodos += nodos
+                print("--------------------")
         else:
             for y in range(0, N, 2):
                 print(f"Probando inicio en: ({x}, {y})")
-                resolver_recorrido_inicial(x, y)
-                print(
-                    "--------------------"
-                )  # Separador de resultados para cada posición inicial del tablero
-
-    # Mostrar el total de nodos visitados y soluciones encontradas
-
+                encontrado, nodos = resolver_recorrido_inicial(x, y)
+                if encontrado:
+                    soluciones_encontradas += 1
+                total_nodos += nodos
+                print("--------------------")
 else:
-    
     for x in range(N):
         for y in range(N):
             print(f"Probando inicio en: ({x}, {y})")
-            resolver_recorrido_inicial(x, y)
-            print(
-                "--------------------"
-        )
+            encontrado, nodos = resolver_recorrido_inicial(x, y)
+            if encontrado:
+                soluciones_encontradas += 1
+            total_nodos += nodos
+            print("--------------------")
 
-# Resultados finales
+# Mostrar el total de nodos visitados y soluciones encontradas
 tiempo_total = time.time() - inicio
-print("Tiempo total en todas las posiciones iniciales:", tiempo_total)
-print("Nodos totales explorados en todas las posiciones iniciales:", total_nodos)
+print("Tiempo total de ejecución:", tiempo_total)
+print("Total de nodos visitados en todas las posiciones iniciales:", total_nodos)
 print("Número de soluciones encontradas:", soluciones_encontradas)
