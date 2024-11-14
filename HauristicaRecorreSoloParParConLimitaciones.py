@@ -1,7 +1,7 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 9
+N = 9  # Puedes ajustar el tamaño del tablero aquí
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero
@@ -104,9 +104,9 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
     if recorrido_caballo(
         x_inicio, y_inicio, 1, tablero, contador_nodos, contador_backtrack
     ):
-        return True, contador_nodos[0]  # Retorna si se encontró solución y el total de nodos visitados
+        return True, tablero, contador_nodos[0]  # Retorna si se encontró solución y el total de nodos visitados
     else:
-        return False, contador_nodos[0]  # Retorna si no se encontró solución y el total de nodos visitados
+        return False, tablero, contador_nodos[0]  # Retorna si no se encontró solución y el total de nodos visitados
 
 # Variables acumulativas
 total_nodos = 0
@@ -118,31 +118,40 @@ if N % 2 == 1:
         if x % 2 == 1:
             for y in range(1, N, 2):
                 print(f"Probando inicio en: ({x}, {y})")
-                encontrado, nodos = resolver_recorrido_inicial(x, y)
+                encontrado, tablero, nodos = resolver_recorrido_inicial(x, y)
                 if encontrado:
                     soluciones_encontradas += 1
                 total_nodos += nodos
+                # Mostrar el tablero para la posición inicial (x, y)
+                for row in tablero:
+                    print(row)
+                print(f"Total de nodos visitados: {nodos}")
                 print("--------------------")
         else:
             for y in range(0, N, 2):
                 print(f"Probando inicio en: ({x}, {y})")
-                encontrado, nodos = resolver_recorrido_inicial(x, y)
+                encontrado, tablero, nodos = resolver_recorrido_inicial(x, y)
                 if encontrado:
                     soluciones_encontradas += 1
                 total_nodos += nodos
+                # Mostrar el tablero para la posición inicial (x, y)
+                for row in tablero:
+                    print(row)
+                print(f"Total de nodos visitados: {nodos}")
                 print("--------------------")
 else:
     for x in range(N):
         for y in range(N):
             print(f"Probando inicio en: ({x}, {y})")
-            encontrado, nodos = resolver_recorrido_inicial(x, y)
+            encontrado, tablero, nodos = resolver_recorrido_inicial(x, y)
             if encontrado:
                 soluciones_encontradas += 1
             total_nodos += nodos
+            # Mostrar el tablero para la posición inicial (x, y)
+            for row in tablero:
+                print(row)
+            print(f"Total de nodos visitados: {nodos}")
             print("--------------------")
 
-# Mostrar el total de nodos visitados y soluciones encontradas
+# Resultados finales
 tiempo_total = time.time() - inicio
-print("Tiempo total de ejecución:", tiempo_total)
-print("Total de nodos visitados en todas las posiciones iniciales:", total_nodos)
-print("Número de soluciones encontradas:", soluciones_encontradas)
