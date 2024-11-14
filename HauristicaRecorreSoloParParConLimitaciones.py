@@ -1,7 +1,7 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 9  # Puedes ajustar el tamaño del tablero aquí
+N = 5  # Puedes ajustar el tamaño del tablero aquí
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero

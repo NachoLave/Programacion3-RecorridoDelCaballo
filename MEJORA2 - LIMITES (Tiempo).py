@@ -1,7 +1,8 @@
+
 import time
 
 # Tamaño del tablero de ajedrez
-N = 5
+N = 9
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero
@@ -17,17 +18,32 @@ limite_movimientos = int(N * N * 2.5)
 def es_valido(x, y, tablero):
     return 0 <= x < N and 0 <= y < N and tablero[x][y] == -1
 
-# Heurística de Warnsdorff modificada
+# Heurística de Warnsdorff modificada con priorización par-par o impar-impar
 def ordenar_movimientos(x, y, tablero):
     movimientos_ordenados = []
+    movimientos_par_impar = []
+    movimientos_impar_par = []
+
     for mov in movimientos_caballo:
         nx, ny = x + mov[0], y + mov[1]
         if es_valido(nx, ny, tablero):
-            movimientos_ordenados.append(
-                (nx, ny, contar_opciones_futuras(nx, ny, tablero))
-            )
+            # Clasificar según la paridad de la posición destino
+            if (nx + ny) % 2 == 0:
+                movimientos_par_impar.append(
+                    (nx, ny, contar_opciones_futuras(nx, ny, tablero))
+                )
+            else:
+                movimientos_impar_par.append(
+                    (nx, ny, contar_opciones_futuras(nx, ny, tablero))
+                )
 
-    movimientos_ordenados.sort(key=lambda m: m[2])
+    # Ordenar cada categoría de movimientos y luego combinarlos
+    movimientos_par_impar.sort(key=lambda m: m[2])
+    movimientos_impar_par.sort(key=lambda m: m[2])
+
+    movimientos_ordenados.extend(movimientos_par_impar)
+    movimientos_ordenados.extend(movimientos_impar_par)
+
     return [(nx, ny) for nx, ny, _ in movimientos_ordenados]
 
 # Función para contar las opciones futuras de un movimiento
@@ -85,6 +101,9 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
     if recorrido_caballo(
         x_inicio, y_inicio, 1, tablero, contador_nodos, contador_backtrack
     ):
+        # Muestra el tablero si se encontró una solución
+        for row in tablero:
+            print(row)
         return True, contador_nodos[0]  # Retorna si se encontró solución y el total de nodos visitados
     else:
         return False, contador_nodos[0]  # Retorna si no se encontró solución y el total de nodos visitados
@@ -98,12 +117,14 @@ if N % 2 == 1:
     for x in range(0, N): 
         if x % 2 == 1:
             for y in range(1, N, 2):
+                print(f"Probando inicio en: ({x}, {y})")
                 encontrado, nodos = resolver_recorrido_inicial(x, y)
                 if encontrado:
                     soluciones_encontradas += 1
                 total_nodos += nodos
         else:
             for y in range(0, N, 2):
+                print(f"Probando inicio en: ({x}, {y})")
                 encontrado, nodos = resolver_recorrido_inicial(x, y)
                 if encontrado:
                     soluciones_encontradas += 1
@@ -111,6 +132,7 @@ if N % 2 == 1:
 else:
     for x in range(N):
         for y in range(N):
+            print(f"Probando inicio en: ({x}, {y})")
             encontrado, nodos = resolver_recorrido_inicial(x, y)
             if encontrado:
                 soluciones_encontradas += 1
