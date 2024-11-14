@@ -2,8 +2,9 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 7
+N = 9
 inicio = time.time()
+
 # Movimientos posibles del caballo en el tablero
 movimientos_caballo = [
     (2, 1),
@@ -18,6 +19,10 @@ movimientos_caballo = [
 
 # Inicialización del tablero de ajedrez
 tablero = [[-1 for _ in range(N)] for _ in range(N)]
+
+# Variables globales para el total de soluciones y nodos visitados
+total_nodos = 0
+total_soluciones = 0
 
 
 # Función para verificar si una posición es válida en el tablero
@@ -76,6 +81,8 @@ def recorrido_caballo(x, y, movimiento, tablero, contador_nodos, contador_backtr
 
     # Caso base: si el tablero está completo, se encontró una solución
     if movimiento == N * N:
+        global total_soluciones
+        total_soluciones += 1
         return True
 
     # Generar todos los movimientos posibles desde la posición actual, ordenados según la nueva heurística
@@ -121,8 +128,12 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
     else:
         print("No se encontró solución")
 
+    # Actualizar el total de nodos visitados global
+    global total_nodos
+    total_nodos += contador_nodos[0]
 
-# Iniciar el recorrido desde una posición inicial en el tablero (por ejemplo, esquina superior izquierda)
+
+# Iniciar el recorrido desde varias posiciones en el tablero
 for x in range(0, N, 2):
     for y in range(0, N, 2):
         print(f"Probando inicio en: ({x}, {y})")
@@ -131,4 +142,7 @@ for x in range(0, N, 2):
             "--------------------"
         )  # Separador de resultados para cada posición inicial del tablero
 
-print(time.time() - inicio)
+# Mostrar el total de nodos visitados y soluciones encontradas
+print("Tiempo total de ejecución:", time.time() - inicio)
+print("Total de nodos visitados en todas las soluciones:", total_nodos)
+print("Total de soluciones encontradas:", total_soluciones)

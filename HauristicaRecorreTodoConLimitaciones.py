@@ -2,7 +2,7 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 10
+N = 7
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero
@@ -13,7 +13,7 @@ movimientos_caballo = [
 
 # Límite de movimientos basado en el tamaño del tablero
 limite_movimientos = int(1.5 * N * N)
-
+soluciones = [0]
 # Inicialización del tablero de ajedrez
 tablero = [[-1 for _ in range(N)] for _ in range(N)]
 
@@ -98,6 +98,7 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
         print(f"Solución encontrada en {end_time - start_time:.4f} segundos")
         print("Nodos visitados:", contador_nodos[0])
         print("Backtracking realizado:", contador_backtrack[0])
+        soluciones[0] += 1
         for fila in tablero:
             print(fila)
     else:
@@ -111,3 +112,4 @@ for x in range(N):
         print("--------------------")
 
 print(time.time() - inicio)
+print(soluciones[0])

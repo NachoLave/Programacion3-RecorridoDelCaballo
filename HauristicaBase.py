@@ -2,8 +2,9 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 5
+N = 9
 inicio = time.time()
+
 # Movimientos posibles del caballo en el tablero
 movimientos_caballo = [
     (2, 1),
@@ -18,6 +19,10 @@ movimientos_caballo = [
 
 # Inicialización del tablero de ajedrez
 tablero = [[-1 for _ in range(N)] for _ in range(N)]
+
+# Contadores globales para total de nodos y soluciones encontradas
+total_nodos = 0
+total_soluciones = 0
 
 
 # Función para verificar si una posición es válida en el tablero
@@ -72,6 +77,7 @@ def recorrido_caballo(x, y, movimiento, tablero, contador_nodos, contador_backtr
 
 # Función para iniciar el recorrido del caballo
 def resolver_recorrido_inicial(x_inicio, y_inicio):
+    global total_nodos, total_soluciones
     # Inicializar el tablero y los contadores
     tablero = [[-1 for _ in range(N)] for _ in range(N)]
     tablero[x_inicio][y_inicio] = 0  # Empezar desde la posición inicial
@@ -85,21 +91,27 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
     ):
         end_time = time.time()
         print(f"Solución encontrada en {end_time - start_time:.4f} segundos")
-        print("Nodos visitados:", contador_nodos[0])
-        print("Backtracking realizado:", contador_backtrack[0])
+        print("Nodos visitados en esta solución:", contador_nodos[0])
+        print("Backtracking realizado en esta solución:", contador_backtrack[0])
         for fila in tablero:
             print(fila)
+
+        # Actualizar contadores globales
+        total_nodos += contador_nodos[0]
+        total_soluciones += 1
     else:
+        total_nodos += contador_nodos[0]
         print("No se encontró solución")
 
 
-# Iniciar el recorrido desde una posición inicial en el tablero (por ejemplo, esquina superior izquierda)
-for x in range(0, N):
-    for y in range(0, N):
+# Iniciar el recorrido desde cada posición inicial en el tablero (todas las celdas)
+for x in range(0, N, 2):
+    for y in range(0, N, 2):
         print(f"Probando inicio en: ({x}, {y})")
         resolver_recorrido_inicial(x, y)
-        print(
-            "--------------------"
-        )  # Separador de resultados para cada posición inicial del tablero
+        print("--------------------")
 
-print(time.time() - inicio)
+# Resultados finales
+print(f"Total de nodos visitados: {total_nodos}")
+print(f"Total de soluciones encontradas: {total_soluciones}")
+print("Tiempo total de ejecución:", time.time() - inicio, "segundos")
