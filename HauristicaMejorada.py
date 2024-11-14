@@ -2,7 +2,7 @@
 import time
 
 # Tamaño del tablero de ajedrez
-N = 9
+N = 11
 inicio = time.time()
 
 # Movimientos posibles del caballo en el tablero
@@ -134,15 +134,39 @@ def resolver_recorrido_inicial(x_inicio, y_inicio):
 
 
 # Iniciar el recorrido desde varias posiciones en el tablero
-for x in range(0, N, 2):
-    for y in range(0, N, 2):
-        print(f"Probando inicio en: ({x}, {y})")
-        resolver_recorrido_inicial(x, y)
-        print(
-            "--------------------"
-        )  # Separador de resultados para cada posición inicial del tablero
+if N % 2 == 1:
+    for x in range(0, N): 
+        if x % 2 == 1:
+            for y in range(1, N, 2):
+                print(f"Probando inicio en: ({x}, {y})")
+                resolver_recorrido_inicial(x, y)
+                print(
+                    "--------------------"
+            )
+        else:
+            for y in range(0, N, 2):
+                print(f"Probando inicio en: ({x}, {y})")
+                resolver_recorrido_inicial(x, y)
+                print(
+                    "--------------------"
+                )  # Separador de resultados para cada posición inicial del tablero
 
-# Mostrar el total de nodos visitados y soluciones encontradas
-print("Tiempo total de ejecución:", time.time() - inicio)
-print("Total de nodos visitados en todas las soluciones:", total_nodos)
-print("Total de soluciones encontradas:", total_soluciones)
+    # Mostrar el total de nodos visitados y soluciones encontradas
+    print("Tiempo total de ejecución:", time.time() - inicio)
+    print("Total de nodos visitados en todas las soluciones:", total_nodos)
+    print("Total de soluciones encontradas:", total_soluciones)
+else:
+    
+    for x in range(N):
+        for y in range(N):
+            print(f"Probando inicio en: ({x}, {y})")
+            resolver_recorrido_inicial(x, y)
+            print(
+                "--------------------"
+        )
+        
+
+    # Mostrar el total de nodos visitados y soluciones encontradas
+    print("Tiempo total de ejecución:", time.time() - inicio)
+    print("Total de nodos visitados en todas las soluciones:", total_nodos)
+    print("Total de soluciones encontradas:", total_soluciones)
